@@ -149,11 +149,31 @@ app.all('/jquery-jsonp-server', (request, response) =>{
 });
 
 app.all('/cors-server', (request, response)=>{
-    //设置响应头
+    // 设置响应头
+    // 指定允许其他域名访问  
+    // 一般用法（*，指定域，动态设置），3是因为*不允许携带认证头和cookies
+    // response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500"); 
+    /**
+     * 如何设置多个请求头
+     *   先判断，再设置
+     * if( req.headers.origin == 'https://www.google.com' || req.headers.origin == 'https://www.baidu.com' ){
+     *   res.header("Access-Control-Allow-Origin", req.headers.origin);
+     * }
+     */
     response.setHeader("Access-Control-Allow-Origin", "*");
+
+    // 允许的请求头字段
     response.setHeader("Access-Control-Allow-Headers", '*');
+
+    // 允许的请求类型
+    // 'Access-Control-Allow-Methods:GET,POST,PUT,POST'
     response.setHeader("Access-Control-Allow-Method", '*');
-    // response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
+
+    //是否允许后续请求携带认证信息（cookies）,该值只能是true,否则不返回
+    response.setHeader("Access-Control-Allow-Credentials:true", 'true');
+    
+    //预检结果缓存时间,也就是上面说到的缓存啦
+    response.setHeader("Access-Control-Max-Age", '1800');
 
     response.send('hello CORS');
 })
